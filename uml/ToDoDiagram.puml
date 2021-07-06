@@ -1,0 +1,53 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class App {
+    + main()
+    + start()
+}
+
+class ToDoMenuController {
+    + viewListsClicked()
+    + saveAllClicked()
+    + uploadClicked()
+}
+
+class ToDo {
+    - title : String
+    - description : String
+    - ID : String
+    - complete : boolean
+}
+
+class ToDoList {
+    - ToDo : ObservableList
+}
+
+
+class ToDoListofLists {
+    - ToDoList : ObservableList
+}
+class ToDoListController {
+    + addTaskClicked()
+    + deleteTaskClicked()
+    + deleteListClicked()
+    + viewCompleteTasksClicked()
+    + viewRemainingClicked()
+    + saveExternallyClicked()
+}
+
+
+ToDoListController *- App
+ToDoMenuController *- App
+
+ToDo *- ToDoListController
+ToDo *- ToDoMenuController
+
+ToDo *-- ToDoList
+
+ToDoList *-- ToDoListofLists
+
+javafx.Application <|-- App
+
+
+@enduml
