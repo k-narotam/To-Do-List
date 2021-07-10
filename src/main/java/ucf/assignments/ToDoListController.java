@@ -15,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -27,53 +29,82 @@ public class ToDoListController implements Initializable {
     @FXML private TableView<ToDo> tableView;
     @FXML private TableColumn<ToDo, String> itemColumn;
     @FXML private TableColumn<ToDo, String> descriptionColumn;
-    @FXML private TableColumn<ToDo, LocalDate> dateColumn;
-    @FXML private TableColumn<ToDo, Boolean> statusColumn;
-    @FXML private TextField item;
-    @FXML private TextField description;
-    @FXML private DatePicker date;
-    private TableView<ToDo> table = new TableView<ToDo>();
-    private final ObservableList<ToDo> data =
-            FXCollections.observableArrayList(
-                    new ToDo("To-Do List project", "COP 3330", LocalDate.of(2021, Month.JULY, 11))
-            );
-
+    @FXML private TableColumn<ToDo, String> dateColumn;
+    @FXML private TableColumn<ToDo, CheckBox> statusColumn;
+    @FXML private TextField itemTextField;
+    @FXML private TextField descriptionTextField;
+    @FXML private DatePicker dateTextField;
     @FXML MenuBar listMenu;
 
+    private ObservableList<ToDo> list = FXCollections.observableArrayList();
+
+    // Set up table view to perform necessary tasks
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         itemColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("item"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("description"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<ToDo, LocalDate>("date"));
-        tableView.setItems(data);
+        dateColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("dateString"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<ToDo, CheckBox>("select"));
+        tableView.setItems(getList());
         tableView.setEditable(true);
         itemColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        dateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
     }
 
+    public ObservableList<ToDo> getList(){
+        list.add(new ToDo("To-Do List", "COP 3330", "2021-08-02"));
+        list.add(new ToDo("Physics Quiz", "PHY 2049", "2022-07-01"));
+        list.add(new ToDo("CDA Quiz", "PHY 2049", "2022-06-30"));
+        return list;
+    }
+
+    // Allows item field to be edited
+    @FXML
+    public void changeItemCellEvent(TableColumn.CellEditEvent cell) {
+        ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
+        cellSelected.setItem(cell.getNewValue().toString());
+    }
+
+    // Allows description field to be edited
+    @FXML
+    public void changeDescriptionCellEvent(TableColumn.CellEditEvent cell) {
+        ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
+        cellSelected.setDescription(cell.getNewValue().toString());
+    }
+
+    // Allows date field to be edited
+    @FXML
+    public void changeDateCellEvent(TableColumn.CellEditEvent cell) {
+        ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
+        cellSelected.setDateString(cell.getNewValue().toString());
+    }
+
+    /*
+        Create a new To Do object
+        Fields from .getText() passed into object
+        Get items from table as list
+        Add new task to the list
+    */
     @FXML
     public void addTaskClicked(ActionEvent actionEvent) {
-        /*
-            Create a new To Do object
-            Fields from .getText() passed into object
-
-            Get items from table as list
-            Add new task to the list
-
-            Configure fx:id on scene builder
-
-         */
+        ToDo newToDo = new ToDo(itemTextField.getText(), descriptionTextField.getText(), dateTextField.getValue().toString());
+        list.add(newToDo);
+        tableView.setItems(list);
     }
 
     // Delete specified task from list
     @FXML
-    public void deleteTaskClicked(ActionEvent actionEvent) {
-        /*
-        Create another observable list containing all the selected tasks for deletion
-        Loop over selected rows and remove the person objects from the table
-     */
+    public void deleteClicked(ActionEvent actionEvent) {
+        ObservableList<ToDo> selectedRows, allItems;
+        allItems = tableView.getItems();
+        selectedRows = tableView.getSelectionModel().getSelectedItems();
+        for (ToDo item: selectedRows) {
+            System.out.println(item.getItem());
+            allItems.remove(item);
+            list.remove(item);
+        }
 
     }
 
@@ -85,7 +116,13 @@ public class ToDoListController implements Initializable {
         Loop over selected rows and remove the person objects from the table that are not complete
         Display new list
         */
-
+        ObservableList<ToDo> completeItems = FXCollections.observableArrayList();
+        for (ToDo item: list) {
+            if (item.getSelect().isSelected()) {
+                completeItems.add(item);
+            }
+        }
+        tableView.setItems(completeItems);
     }
 
     // Display of all uncompleted tasks
@@ -96,6 +133,20 @@ public class ToDoListController implements Initializable {
             Loop over selected rows and remove the person objects from the table that are complete
             Display new list
         */
+
+        ObservableList<ToDo> remaining = FXCollections.observableArrayList();
+        for (ToDo item: list) {
+            if (!item.getSelect().isSelected()) {
+                remaining.add(item);
+            }
+        }
+        tableView.setItems(remaining);
+    }
+
+    // Display of all tasks in list
+    @FXML
+    public void viewAllClicked(ActionEvent actionEvent) {
+        tableView.setItems(list);
     }
 
     // Saves list into a text file
@@ -112,6 +163,8 @@ public class ToDoListController implements Initializable {
     // Clears To-Do list display, empty list
     @FXML
     public void clearAllClicked(ActionEvent actionEvent) {
+        list.clear();
+        //tableView.refresh();
     }
 
     @FXML
@@ -134,4 +187,5 @@ public class ToDoListController implements Initializable {
 
          */
     }
+
 }

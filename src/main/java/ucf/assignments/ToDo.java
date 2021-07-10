@@ -6,8 +6,10 @@
 package ucf.assignments;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.scene.control.CheckBox;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /*
     Code generate getters, setters, constructor for To-Do class
@@ -16,7 +18,8 @@ import java.time.LocalDate;
 public class ToDo {
     private SimpleStringProperty item, description;
     private LocalDate date;
-    private boolean complete = false;
+    private SimpleStringProperty dateString;
+    private CheckBox select;
 
     public ToDo(String item, String description, LocalDate date) {
         this.item = new SimpleStringProperty(item);
@@ -24,36 +27,53 @@ public class ToDo {
         this.date = date;
     }
 
+    public ToDo(String item, String description, String dateString) {
+        this.item = new SimpleStringProperty(item);
+        this.description = new SimpleStringProperty(description);
+        this.dateString = new SimpleStringProperty(dateString);
+        this.select = new CheckBox();
+    }
+
     public String getItem() {
         return item.get();
     }
 
-    public StringProperty itemProperty() {
-        return item;
-    }
-
     public void setItem(String item) {
-        this.item.set(item);
+        this.item = new SimpleStringProperty(item);
     }
 
     public String getDescription() {
         return description.get();
     }
 
-    public StringProperty descriptionProperty() {
-        return description;
-    }
-
     public void setDescription(String description) {
-        this.description.set(description);
+        this.description = new SimpleStringProperty(description);
     }
-
     public LocalDate getDate() {
         return date;
     }
 
+    public String getDateString() {
+        return dateString.get();
+    }
+
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public void setDateString(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+        this.dateString = new SimpleStringProperty(date.toString());
+        //this.dateString = new SimpleStringProperty(dateString);
+    }
+
+    public CheckBox getSelect() {
+        return select;
+    }
+
+    public void setSelect(CheckBox select) {
+        this.select = select;
     }
 
 }
