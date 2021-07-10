@@ -4,6 +4,9 @@
  */
 package ucf.assignments;
 
+/*
+    This class is deemed unnecessary due to the updated constraints of assignment 4
+ */
 public class ToDoListofLists {
 
     /*

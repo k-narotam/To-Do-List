@@ -5,34 +5,61 @@
 
 package ucf.assignments;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.ResourceBundle;
 
-public class ToDoListController {
+public class ToDoListController implements Initializable {
 
     @FXML private TableView<ToDo> tableView;
     @FXML private TableColumn<ToDo, String> itemColumn;
     @FXML private TableColumn<ToDo, String> descriptionColumn;
     @FXML private TableColumn<ToDo, LocalDate> dateColumn;
-    @FXML private TableColumn<ToDo, String> statusColumn;
-    // Load scene for returning to main menu
+    @FXML private TableColumn<ToDo, Boolean> statusColumn;
+    @FXML private TextField item;
+    @FXML private TextField description;
+    @FXML private DatePicker date;
+    private TableView<ToDo> table = new TableView<ToDo>();
+    private final ObservableList<ToDo> data =
+            FXCollections.observableArrayList(
+                    new ToDo("To-Do List project", "COP 3330", LocalDate.of(2021, Month.JULY, 11))
+            );
+
+    @FXML MenuBar listMenu;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        itemColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("item"));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("description"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<ToDo, LocalDate>("date"));
+        tableView.setItems(data);
+        tableView.setEditable(true);
+        itemColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+    }
+
+
     @FXML
     public void homeClicked(ActionEvent actionEvent) throws IOException {
-        Parent menuViewParent = FXMLLoader.load(getClass().getResource("ToDoMenu.fxml"));
-        Scene menuViewScene = new Scene(menuViewParent);
-        Stage window = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-
-        window.setScene(menuViewScene);
-        window.show();
+        Stage stage = (Stage) listMenu.getScene().getWindow();
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("ToDoMenu.fxml")));
+        stage.setScene(scene);
+        stage.show();
     }
 
     /* New method
@@ -70,8 +97,6 @@ public class ToDoListController {
 
          */
     }
-
-
 
     // Delete specified task from list
     @FXML
@@ -114,29 +139,30 @@ public class ToDoListController {
          */
     }
 
-    // Deletes current list
+
+    // Clears To-Do list display, empty list
     @FXML
-    public void deleteListClicked(ActionEvent actionEvent) {
-        /*
-            search for selected list in ToDoListofLists
-            delete displayed list from ToDoListofLists object
-         */
+    public void clearAllClicked(ActionEvent actionEvent) {
     }
 
-
-    public void createNewList(ActionEvent actionEvent) {
-    /*
-        Creates new To-Do list, increment to ToDoListofList
-        Change table view to reflect new list
-        Show new view of To-Do list
-        Configure combo box to handle multiple list displays
-     */
+    @FXML
+    public void aboutClicked(ActionEvent actionEvent) throws IOException {
+        Stage stage = (Stage) listMenu.getScene().getWindow();
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("InstructionsPage.fxml")));
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void sortTable(ActionEvent actionEvent) {
+    // Upload list from external storage
+    @FXML
+    public void loadListClicked(ActionEvent actionEvent) {
         /*
-            Sorting algorithm that sorts To-Do observable list
-            by date, changing display of table
+            Set up JavaFX FileChooser
+            FileChooser fileChooser = new FileChooser()
+            Display the FileChooser Dialog
+            Read in file into to-do list format
+            Switch screen to uploaded list displayed
+
          */
     }
 }

@@ -4,16 +4,21 @@
  */
 
 package ucf.assignments;
-
 import javafx.collections.ObservableList;
 
 public class ToDoList {
-    /*
-        public ObservableList<To Do> list() {
 
-            Set up observable list of to-do objects
-            add To-do objects with data to list
+        private ObservableList<ToDo> myList;
 
+        public ToDoList(ObservableList<ToDo> myList) {
+                this.myList = myList;
         }
-     */
+
+        public ObservableList<ToDo> getMyList() {
+                return myList;
+        }
+
+        public void setMyList(ObservableList<ToDo> myList) {
+                this.myList = myList;
+        }
 }

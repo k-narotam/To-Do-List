@@ -6,12 +6,10 @@
 package ucf.assignments;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class App extends Application {
@@ -21,17 +19,17 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("ToDoMenu.fxml"));
-            Scene scene = new Scene(root);
+    public void start(Stage stage) throws IOException {
 
-            primaryStage.setScene(scene);
-            primaryStage.setTitle("ToDoMenu");
-            primaryStage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        Parent root = FXMLLoader.load(getClass().getResource("ToDoList.fxml"));
+        Scene scene = new Scene(root);
+        stage.setTitle("ToDoList");
+        stage.setScene(scene);
+        stage.show();
+
+
     }
+
+
 }
+

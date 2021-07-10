@@ -5,7 +5,7 @@
 
 package ucf.assignments;
 
-import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import java.time.LocalDate;
 
@@ -14,15 +14,14 @@ import java.time.LocalDate;
  */
 
 public class ToDo {
-    private StringProperty item, description;
+    private SimpleStringProperty item, description;
     private LocalDate date;
-    private BooleanProperty complete;
+    private boolean complete = false;
 
-    public ToDo(StringProperty item, StringProperty description, LocalDate date, BooleanProperty complete) {
-        this.item = item;
-        this.description = description;
+    public ToDo(String item, String description, LocalDate date) {
+        this.item = new SimpleStringProperty(item);
+        this.description = new SimpleStringProperty(description);
         this.date = date;
-        this.complete = complete;
     }
 
     public String getItem() {
@@ -57,15 +56,4 @@ public class ToDo {
         this.date = date;
     }
 
-    public boolean isComplete() {
-        return complete.get();
-    }
-
-    public BooleanProperty completeProperty() {
-        return complete;
-    }
-
-    public void setComplete(boolean complete) {
-        this.complete.set(complete);
-    }
 }
