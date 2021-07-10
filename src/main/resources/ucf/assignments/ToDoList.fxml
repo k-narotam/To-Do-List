@@ -39,11 +39,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#viewRemainingClicked" text="Incomplete" />
                     </items>
                   </Menu>
-                <Menu mnemonicParsing="false" text="Home">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#homeClicked" text="Back to Menu" />
-                     </items>
-                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#aboutClicked" text="About" />

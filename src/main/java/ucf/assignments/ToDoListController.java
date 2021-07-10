@@ -53,37 +53,6 @@ public class ToDoListController implements Initializable {
 
     }
 
-
-    @FXML
-    public void homeClicked(ActionEvent actionEvent) throws IOException {
-        Stage stage = (Stage) listMenu.getScene().getWindow();
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("ToDoMenu.fxml")));
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    /* New method
-        Configure TableView
-         @FXML private TableView<To Do> tableView;
-         Configure each column (complete, date, item, description)
-         private TableColumn<To-Do, String> task;
-         Update fx:id on scene builder
-
-         Create instance variables used to create new To-do objects
-
-         Create new ToDoList object
-     */
-    public void changeItem(TableColumn.CellEditEvent cell) {
-         /*
-        Create "CellEditEvent"s to allow each list item to be edited
-        tableView.getSelectionModel().getSelectedItem()
-        Update "onEditCommit" on scene builder
-
-        configure table to be able to select multiple rows
-     */
-    }
-
-
     @FXML
     public void addTaskClicked(ActionEvent actionEvent) {
         /*
