@@ -4,11 +4,16 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ucf.assignments.InstructionsController">
    <children>
-      <Label layoutX="25.0" layoutY="46.0" prefHeight="38.0" prefWidth="41.0" text="Help" />
       <MenuBar fx:id="helpBar" layoutX="-3.0" prefHeight="28.0" prefWidth="606.0">
         <menus>
           <Menu mnemonicParsing="false" text="Menu">
@@ -18,5 +23,42 @@
           </Menu>
         </menus>
       </MenuBar>
+      <ImageView fitHeight="17.0" fitWidth="23.0" layoutX="561.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@pinkCheck.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="583.0" prefHeight="17.0" prefWidth="23.0" text="Rey" textFill="#d8127c" />
+      <GridPane gridLinesVisible="true" layoutY="26.0" prefHeight="378.0" prefWidth="606.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.0" minWidth="10.0" prefWidth="71.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="539.0" minWidth="10.0" prefWidth="532.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="56.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="86.0" minHeight="0.0" prefHeight="52.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER" prefHeight="33.0" prefWidth="184.0" text="Edit Task" textFill="#d8127c" GridPane.rowIndex="2" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="185.0" text="View" textFill="#d8127c" GridPane.rowIndex="3" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="198.0" text="Saving" textFill="#d8127c" GridPane.rowIndex="5" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="183.0" text="Uploading" textFill="#d8127c" GridPane.rowIndex="6" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Double click desired cell&#10;Note: Table will only populate with valid  date from  the Gregorian Celendar, and description with length between 1 and 256 characters" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Menu-&gt;View-&gt;Incomplete or Complete Tasks viewer based on checkboxs &#10;Menu-&gt;View-&gt;Full description to view items with long descriptions" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Select a task and chose Menu-&gt;Edit-&gt;Delete&#10;To delete all tasks: Menu-&gt;Edit-&gt;Clear All" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Menu-&gt;File-&gt;Save Externally" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="186.0" text="New Task" textFill="#d8127c" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="187.0" text="Delete Task" textFill="#d8127c" GridPane.rowIndex="1" />
+            <TextArea editable="false" prefHeight="60.0" prefWidth="539.0" text="Populate Date &amp; Description fields -&gt; Add with valid  date from  the Gregorian Celendar, and description with length between 1 and 256 characters " wrapText="true" GridPane.columnIndex="1" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="TableView allows sorting by any column, click &quot;Complete&quot;, &quot;Date&quot;, or &quot;Description&quot; to sort either descending or ascending" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="91.0" text="Sorting" textFill="#d8127c" GridPane.rowIndex="4" />
+            <TextArea editable="false" prefHeight="200.0" prefWidth="200.0" text="Menu-&gt;File-&gt;Load List" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+         </children>
+      </GridPane>
    </children>
 </AnchorPane>

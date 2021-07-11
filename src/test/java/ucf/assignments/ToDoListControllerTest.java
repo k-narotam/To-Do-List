@@ -47,28 +47,4 @@ class ToDoListControllerTest {
         // save currently viewed list
         // test if file exists
     }
-
-    @Test
-    void deleteListClicked() {
-        // make a new ToDoListController
-        // add sample values for ToDoListofLists object
-        // delete list
-        // assert list not in ToDoListofLists
-    }
-
-    @Test
-    void createNewList() {
-        // make a new ToDoListController
-        // add sample values for ToDoListofLists object
-        // create new list
-        // assert size of list increased by one
-    }
-
-    @Test
-    void sortTable() {
-        // make a new ToDoListController
-        // add sample values for ToDoListofLists object
-        // create new list that is sorted
-        // assert sort function displays tasks in the correct order
-    }
 }

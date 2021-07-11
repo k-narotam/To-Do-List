@@ -16,30 +16,13 @@ import java.time.format.DateTimeFormatter;
  */
 
 public class ToDo {
-    private SimpleStringProperty item, description;
-    private LocalDate date;
-    private SimpleStringProperty dateString;
+    private SimpleStringProperty description, dateString;
     private CheckBox select;
 
-    public ToDo(String item, String description, LocalDate date) {
-        this.item = new SimpleStringProperty(item);
-        this.description = new SimpleStringProperty(description);
-        this.date = date;
-    }
-
-    public ToDo(String item, String description, String dateString) {
-        this.item = new SimpleStringProperty(item);
+    public ToDo(String description, String dateString) {
         this.description = new SimpleStringProperty(description);
         this.dateString = new SimpleStringProperty(dateString);
         this.select = new CheckBox();
-    }
-
-    public String getItem() {
-        return item.get();
-    }
-
-    public void setItem(String item) {
-        this.item = new SimpleStringProperty(item);
     }
 
     public String getDescription() {
@@ -49,16 +32,9 @@ public class ToDo {
     public void setDescription(String description) {
         this.description = new SimpleStringProperty(description);
     }
-    public LocalDate getDate() {
-        return date;
-    }
 
     public String getDateString() {
         return dateString.get();
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     public void setDateString(String dateString) {

@@ -5,6 +5,7 @@
 
 package ucf.assignments;
 
+import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,23 +16,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ResourceBundle;
 
 public class ToDoListController implements Initializable {
 
     @FXML private TableView<ToDo> tableView;
-    @FXML private TableColumn<ToDo, String> itemColumn;
     @FXML private TableColumn<ToDo, String> descriptionColumn;
     @FXML private TableColumn<ToDo, String> dateColumn;
     @FXML private TableColumn<ToDo, CheckBox> statusColumn;
-    @FXML private TextField itemTextField;
     @FXML private TextField descriptionTextField;
     @FXML private DatePicker dateTextField;
     @FXML MenuBar listMenu;
@@ -41,37 +36,29 @@ public class ToDoListController implements Initializable {
     // Set up table view to perform necessary tasks
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        itemColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("item"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("description"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<ToDo, String>("dateString"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<ToDo, CheckBox>("select"));
         tableView.setItems(getList());
         tableView.setEditable(true);
-        itemColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         dateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     public ObservableList<ToDo> getList(){
-        list.add(new ToDo("To-Do List", "COP 3330", "2021-08-02"));
-        list.add(new ToDo("Physics Quiz", "PHY 2049", "2022-07-01"));
-        list.add(new ToDo("CDA Quiz", "PHY 2049", "2022-06-30"));
+        list.add(new ToDo("To-Do List - COP 3330", "2021-08-02"));
+        list.add(new ToDo("Physics Quiz - PHY 2049", "2022-07-01"));
+        list.add(new ToDo("CDA Quiz - PHY 2049", "2022-06-30"));
         return list;
-    }
-
-    // Allows item field to be edited
-    @FXML
-    public void changeItemCellEvent(TableColumn.CellEditEvent cell) {
-        ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
-        cellSelected.setItem(cell.getNewValue().toString());
     }
 
     // Allows description field to be edited
     @FXML
     public void changeDescriptionCellEvent(TableColumn.CellEditEvent cell) {
         ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
-        cellSelected.setDescription(cell.getNewValue().toString());
+        if (cell.getNewValue().toString().length() <= 256 && cell.getNewValue().toString().length()>=1)
+            cellSelected.setDescription(cell.getNewValue().toString());
     }
 
     // Allows date field to be edited
@@ -89,9 +76,12 @@ public class ToDoListController implements Initializable {
     */
     @FXML
     public void addTaskClicked(ActionEvent actionEvent) {
-        ToDo newToDo = new ToDo(itemTextField.getText(), descriptionTextField.getText(), dateTextField.getValue().toString());
-        list.add(newToDo);
-        tableView.setItems(list);
+        if (descriptionTextField.getText().length() >= 1 && descriptionTextField.getText().length() <= 256)
+        {
+            ToDo newToDo = new ToDo(descriptionTextField.getText(), dateTextField.getValue().toString());
+            list.add(newToDo);
+            tableView.setItems(list);
+        }
     }
 
     // Delete specified task from list
@@ -101,8 +91,6 @@ public class ToDoListController implements Initializable {
         allItems = tableView.getItems();
         selectedRows = tableView.getSelectionModel().getSelectedItems();
         for (ToDo item: selectedRows) {
-            System.out.println(item.getItem());
-            allItems.remove(item);
             list.remove(item);
         }
 
@@ -156,7 +144,18 @@ public class ToDoListController implements Initializable {
             save text to file
             create new writer
             Save all to-do lists in observable list is written to a file
-         */
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save List");
+
+        Gson gson = new Gson();
+        String userJson = gson.toJson(list.get(0));
+        try (FileWriter file = new FileWriter("list.json")) {
+            file.write(userJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    */
     }
 
 
@@ -188,4 +187,27 @@ public class ToDoListController implements Initializable {
          */
     }
 
+    public void viewDescriptionClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("DescriptionInfo.fxml"));
+        Stage stage = (Stage) listMenu.getScene().getWindow();
+        Scene scene = new Scene(loader.load());
+        DescriptionInfoController controller = loader.getController();
+        controller.initData(tableView.getSelectionModel().getSelectedItem());
+        stage.setScene(scene);
+        stage.show();
+
+        /*
+        Parent tableViewParent = loader.load();
+        Scene tableViewScene = new Scene(tableViewParent);
+
+
+
+        Stage window = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
+        window.setScene(tableViewScene);
+        window.show();
+         */
+
+
+    }
 }

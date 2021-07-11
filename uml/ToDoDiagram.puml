@@ -6,46 +6,44 @@ class App {
     + start()
 }
 
-class ToDoMenuController {
-    + viewListsClicked()
-    + saveAllClicked()
-    + uploadClicked()
-}
 
 class ToDo {
-    - title : String
     - description : String
-    - ID : String
-    - complete : boolean
+    - stringDate : String
+    - select : Checkbox
 }
 
-class ToDoList {
-    - ToDo : ObservableList
-}
-
-
-class ToDoListofLists {
-    - ToDoList : ObservableList
-}
 class ToDoListController {
+    + changeItemCellEvent()
+    + changeDescriptionCellEvent()
+    + changeDateCellEvent()
     + addTaskClicked()
     + deleteTaskClicked()
-    + deleteListClicked()
     + viewCompleteTasksClicked()
     + viewRemainingClicked()
+    + viewAllClicked()
+    + clearAllClicked()
+    + aboutClicked()
+    + viewDescriptionClicked()
+    + loadListClicked()
     + saveExternallyClicked()
 }
 
+class DescriptionInfoController {
+    + initData()
+    + backClicked()
+}
 
+class InstructionsController {
+    + backClicked()
+}
 ToDoListController *- App
-ToDoMenuController *- App
 
 ToDo *- ToDoListController
-ToDo *- ToDoMenuController
 
-ToDo *-- ToDoList
+DescriptionInfoController *-- ToDoListController
+InstructionsController *-- ToDoListController
 
-ToDoList *-- ToDoListofLists
 
 javafx.Application <|-- App
 
