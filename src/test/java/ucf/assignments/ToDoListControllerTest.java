@@ -7,53 +7,46 @@ package ucf.assignments;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ToDoListControllerTest {
-    private ObservableList list, newList;
+    private ArrayList<ArrayToDo> list = new ArrayList<>();
+    private ArrayList<ArrayToDo> expected = new ArrayList<>();
     @Test
     void addTaskClicked() {
 
-        ToDoListController controller= new ToDoListController();
-        list = controller.addTask("Assignment4", "COP3330");
-        newList = controller.addTask("Quiz3", "PHY2049");
-        assertNotEquals(list, newList);
-
-
-        // make a new ToListController
-        // add sample values for ToDoListofLists object
-        // another list of tasks with additional task
-        // assert lists are equal after command
+        ToDoListMethods methods= new ToDoListMethods();
+        list = methods.addTask("Assignment4", "2021-07-11", list);
+        expected.add(new ArrayToDo("Assignment4", "2021-07-11"));
+        assertEquals(list.get(0).getDescription(), expected.get(0).getDescription());
     }
 
     @Test
     void deleteTaskClicked() {
-        // make a new ToListController
-        // add sample values for ToDoListofLists object
-        // another list of tasks without chosen task
-        // assert lists are equal after command
+        ToDoListMethods methods= new ToDoListMethods();
+        list = methods.addTask("Assignment4", "2021-07-11", list);
+        expected.add(new ArrayToDo("Assignment4", "2021-07-11"));
+        list.remove(0);
+        expected.remove(0);
+        assertEquals(list.size(), expected.size());
     }
 
     @Test
-    void viewCompleteTasksClicked() {
-
-        // make a new ToDoListController
-        // add sample values for ToDoListofLists object
-        // create ToDoListofLists object with to-do lists status complete
-        // assert if view remaining displays same items
+    void clearTest() {
+        ToDoListMethods methods= new ToDoListMethods();
+        list = methods.addTask("Assignment4", "2021-07-11", list);
+        list.clear();
+        assert(list.size()==0);
     }
 
     @Test
-    void viewRemainingClicked() {
-        // make a new ToDoListController
-        // add sample values for ToDoListofLists object
-        // create ToDoListofLists object with to-do lists status incomplete
-        // assert if view remaining displays same items
+    void fileTest() {
+        ToDoListMethods methods= new ToDoListMethods();
+        list = methods.addTask("Assignment4", "2021-07-11", list);
+        //expected = methods.parse(ListTest.json);
     }
 
-    @Test
-    void saveExternallyClicked() {
-        // save currently viewed list
-        // test if file exists
-    }
 }

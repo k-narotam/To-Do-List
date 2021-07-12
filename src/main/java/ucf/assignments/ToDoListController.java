@@ -10,9 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -32,7 +30,6 @@ public class ToDoListController implements Initializable {
     @FXML private TextField descriptionTextField;
     @FXML private DatePicker dateTextField;
     @FXML MenuBar listMenu;
-    @FXML private MenuItem saveExternally;
 
     private ObservableList<ToDo> list = FXCollections.observableArrayList();
 
@@ -46,7 +43,7 @@ public class ToDoListController implements Initializable {
         tableView.setEditable(true);
         descriptionColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         dateColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     public ObservableList<ToDo> getList(){
@@ -54,6 +51,7 @@ public class ToDoListController implements Initializable {
     }
 
     // Allows description field to be edited
+    // Character constraints added
     @FXML
     public void changeDescriptionCellEvent(TableColumn.CellEditEvent cell) {
         ToDo cellSelected = tableView.getSelectionModel().getSelectedItem();
@@ -89,20 +87,20 @@ public class ToDoListController implements Initializable {
     }
 
     // Delete specified task from list
+    // Get selected item from selectionModel
     @FXML
     public void deleteClicked(ActionEvent actionEvent) {
         deleteTask();
     }
 
     public void deleteTask() {
-        ObservableList<ToDo> selectedRows;
-        selectedRows = tableView.getSelectionModel().getSelectedItems();
-        for (ToDo item: selectedRows) {
-            list.remove(item);
-        }
+        ToDo selected;
+        selected = tableView.getSelectionModel().getSelectedItem();
+        list.remove(selected);
     }
 
     // Display of only completed tasks
+    // Check if checkbox is selected
     @FXML
     public void viewCompleteTasksClicked(ActionEvent actionEvent) {
         tableView.setItems(viewComplete());
@@ -125,6 +123,7 @@ public class ToDoListController implements Initializable {
 
 
     // Display of all uncompleted tasks
+    // Check if checkbox is not selected
     @FXML
     public void viewRemainingClicked(ActionEvent actionEvent) {
         tableView.setItems(viewRemaining());
@@ -169,9 +168,9 @@ public class ToDoListController implements Initializable {
         parse(theFile);
     }
     /*
-        save text to file
-        create new writer
-        Save all to-do lists in observable list is written to a file
+        Create file chooser
+        Save as an arrayList in order to serialize to json
+        Create a writer and save json file
     */
     @SuppressWarnings("unchecked")
     @FXML
@@ -179,7 +178,6 @@ public class ToDoListController implements Initializable {
         Stage stage = (Stage)listMenu.getScene().getWindow();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save List");
-        //File theFile = fileChooser.showOpenDialog(stage);
 
         File theFile = fileChooser.showSaveDialog(stage);
         ArrayList <ArrayToDo> arrayList = new ArrayList();
@@ -198,6 +196,9 @@ public class ToDoListController implements Initializable {
         writer.close();
     }
 
+    /*
+           Json deserialization from Assignment 3 exercise 44
+     */
     public void parse(File file) {
         try {
             JsonElement fileElement = JsonParser.parseReader(new FileReader(file));
@@ -213,8 +214,6 @@ public class ToDoListController implements Initializable {
                 String description = productJsonObject.get("description").getAsString();
 
                 ToDo newItem = new ToDo(description, date);
-                System.out.println(newItem.getDateString());
-                System.out.println(newItem.getDescription());
                 list.add(newItem);
                 tableView.setItems(list);
             }
