@@ -4,14 +4,22 @@
  */
 package ucf.assignments;
 
+import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ToDoListControllerTest {
-
+    private ObservableList list, newList;
     @Test
     void addTaskClicked() {
+
+        ToDoListController controller= new ToDoListController();
+        list = controller.addTask("Assignment4", "COP3330");
+        newList = controller.addTask("Quiz3", "PHY2049");
+        assertNotEquals(list, newList);
+
+
         // make a new ToListController
         // add sample values for ToDoListofLists object
         // another list of tasks with additional task
@@ -28,6 +36,7 @@ class ToDoListControllerTest {
 
     @Test
     void viewCompleteTasksClicked() {
+
         // make a new ToDoListController
         // add sample values for ToDoListofLists object
         // create ToDoListofLists object with to-do lists status complete

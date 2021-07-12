@@ -11,10 +11,6 @@ import javafx.scene.control.CheckBox;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-/*
-    Code generate getters, setters, constructor for To-Do class
- */
-
 public class ToDo {
     private SimpleStringProperty description, dateString;
     private CheckBox select;
@@ -41,7 +37,6 @@ public class ToDo {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date = LocalDate.parse(dateString, formatter);
         this.dateString = new SimpleStringProperty(date.toString());
-        //this.dateString = new SimpleStringProperty(dateString);
     }
 
     public CheckBox getSelect() {

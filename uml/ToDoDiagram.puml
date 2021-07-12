@@ -23,26 +23,13 @@ class ToDoListController {
     + viewRemainingClicked()
     + viewAllClicked()
     + clearAllClicked()
-    + aboutClicked()
-    + viewDescriptionClicked()
     + loadListClicked()
     + saveExternallyClicked()
 }
 
-class DescriptionInfoController {
-    + initData()
-    + backClicked()
-}
-
-class InstructionsController {
-    + backClicked()
-}
 ToDoListController *- App
 
 ToDo *- ToDoListController
-
-DescriptionInfoController *-- ToDoListController
-InstructionsController *-- ToDoListController
 
 
 javafx.Application <|-- App

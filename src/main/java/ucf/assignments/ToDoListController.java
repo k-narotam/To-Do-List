@@ -5,7 +5,7 @@
 
 package ucf.assignments;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,9 +16,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ToDoListController implements Initializable {
@@ -30,6 +32,7 @@ public class ToDoListController implements Initializable {
     @FXML private TextField descriptionTextField;
     @FXML private DatePicker dateTextField;
     @FXML MenuBar listMenu;
+    @FXML private MenuItem saveExternally;
 
     private ObservableList<ToDo> list = FXCollections.observableArrayList();
 
@@ -47,9 +50,6 @@ public class ToDoListController implements Initializable {
     }
 
     public ObservableList<ToDo> getList(){
-        list.add(new ToDo("To-Do List - COP 3330", "2021-08-02"));
-        list.add(new ToDo("Physics Quiz - PHY 2049", "2022-07-01"));
-        list.add(new ToDo("CDA Quiz - PHY 2049", "2022-06-30"));
         return list;
     }
 
@@ -76,33 +76,43 @@ public class ToDoListController implements Initializable {
     */
     @FXML
     public void addTaskClicked(ActionEvent actionEvent) {
-        if (descriptionTextField.getText().length() >= 1 && descriptionTextField.getText().length() <= 256)
+        tableView.setItems(addTask(descriptionTextField.getText(), dateTextField.getValue().toString()));
+    }
+
+    public ObservableList addTask(String description, String date) {
+        if (description.length() >= 1 && description.length() <= 256)
         {
-            ToDo newToDo = new ToDo(descriptionTextField.getText(), dateTextField.getValue().toString());
+            ToDo newToDo = new ToDo(description, date);
             list.add(newToDo);
-            tableView.setItems(list);
         }
+        return list;
     }
 
     // Delete specified task from list
     @FXML
     public void deleteClicked(ActionEvent actionEvent) {
-        ObservableList<ToDo> selectedRows, allItems;
-        allItems = tableView.getItems();
+        deleteTask();
+    }
+
+    public void deleteTask() {
+        ObservableList<ToDo> selectedRows;
         selectedRows = tableView.getSelectionModel().getSelectedItems();
         for (ToDo item: selectedRows) {
             list.remove(item);
         }
-
     }
 
     // Display of only completed tasks
     @FXML
     public void viewCompleteTasksClicked(ActionEvent actionEvent) {
-        /*
-        Create another observable list containing all the tasks with status complete
-        Loop over selected rows and remove the person objects from the table that are not complete
-        Display new list
+        tableView.setItems(viewComplete());
+    }
+
+    public ObservableList viewComplete() {
+         /*
+            Create another observable list containing all the tasks with status complete
+            Loop over selected rows and remove the person objects from the table that are not complete
+            Display new list
         */
         ObservableList<ToDo> completeItems = FXCollections.observableArrayList();
         for (ToDo item: list) {
@@ -110,25 +120,30 @@ public class ToDoListController implements Initializable {
                 completeItems.add(item);
             }
         }
-        tableView.setItems(completeItems);
+        return completeItems;
     }
+
 
     // Display of all uncompleted tasks
     @FXML
     public void viewRemainingClicked(ActionEvent actionEvent) {
+        tableView.setItems(viewRemaining());
+    }
+
+    public ObservableList viewRemaining() {
          /*
             Create another observable list containing all the tasks with status incomplete
             Loop over selected rows and remove the person objects from the table that are complete
             Display new list
         */
-
         ObservableList<ToDo> remaining = FXCollections.observableArrayList();
         for (ToDo item: list) {
             if (!item.getSelect().isSelected()) {
                 remaining.add(item);
             }
         }
-        tableView.setItems(remaining);
+        return remaining;
+
     }
 
     // Display of all tasks in list
@@ -137,77 +152,80 @@ public class ToDoListController implements Initializable {
         tableView.setItems(list);
     }
 
-    // Saves list into a text file
-    @FXML
-    public void saveExternallyClicked(ActionEvent actionEvent) {
-        /*
-            save text to file
-            create new writer
-            Save all to-do lists in observable list is written to a file
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save List");
-
-        Gson gson = new Gson();
-        String userJson = gson.toJson(list.get(0));
-        try (FileWriter file = new FileWriter("list.json")) {
-            file.write(userJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    */
-    }
-
 
     // Clears To-Do list display, empty list
     @FXML
     public void clearAllClicked(ActionEvent actionEvent) {
         list.clear();
-        //tableView.refresh();
-    }
-
-    @FXML
-    public void aboutClicked(ActionEvent actionEvent) throws IOException {
-        Stage stage = (Stage) listMenu.getScene().getWindow();
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("InstructionsPage.fxml")));
-        stage.setScene(scene);
-        stage.show();
     }
 
     // Upload list from external storage
     @FXML
     public void loadListClicked(ActionEvent actionEvent) {
-        /*
-            Set up JavaFX FileChooser
-            FileChooser fileChooser = new FileChooser()
-            Display the FileChooser Dialog
-            Read in file into to-do list format
-            Switch screen to uploaded list displayed
+        Stage stage = (Stage)listMenu.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load List");
+        File theFile = fileChooser.showOpenDialog(stage);
+        parse(theFile);
+    }
+    /*
+        save text to file
+        create new writer
+        Save all to-do lists in observable list is written to a file
+    */
+    @SuppressWarnings("unchecked")
+    @FXML
+    public void saveExternallyClicked(ActionEvent actionEvent) throws FileNotFoundException {
+        Stage stage = (Stage)listMenu.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save List");
+        //File theFile = fileChooser.showOpenDialog(stage);
 
-         */
+        File theFile = fileChooser.showSaveDialog(stage);
+        ArrayList <ArrayToDo> arrayList = new ArrayList();
+        for (int i = 0; i < list.size(); i++) {
+           arrayList.add(new ArrayToDo(list.get(i).getDescription(), list.get(i).getDateString()));
+        }
+        Gson gson = new Gson();
+        String arrayJson = gson.toJson(arrayList);
+        saveTexttoFile(arrayJson, theFile);
     }
 
-    public void viewDescriptionClicked(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("DescriptionInfo.fxml"));
-        Stage stage = (Stage) listMenu.getScene().getWindow();
-        Scene scene = new Scene(loader.load());
-        DescriptionInfoController controller = loader.getController();
-        controller.initData(tableView.getSelectionModel().getSelectedItem());
-        stage.setScene(scene);
-        stage.show();
-
-        /*
-        Parent tableViewParent = loader.load();
-        Scene tableViewScene = new Scene(tableViewParent);
-
-
-
-        Stage window = (Stage)((Node) actionEvent.getSource()).getScene().getWindow();
-        window.setScene(tableViewScene);
-        window.show();
-         */
-
-
+    public void saveTexttoFile(String content, File file) throws FileNotFoundException {
+        PrintWriter writer;
+        writer = new PrintWriter(file);
+        writer.println("{\"toDoList\" : " + content + "}");
+        writer.close();
     }
+
+    public void parse(File file) {
+        try {
+            JsonElement fileElement = JsonParser.parseReader(new FileReader(file));
+            JsonObject fileObject = fileElement.getAsJsonObject();
+
+            // process products
+            JsonArray jsonArrayProducts = fileObject.get("toDoList").getAsJsonArray();
+
+            for (JsonElement productElement : jsonArrayProducts) {
+                JsonObject productJsonObject = productElement.getAsJsonObject();
+                // extract data
+                String date = productJsonObject.get("dateString").getAsString();
+                String description = productJsonObject.get("description").getAsString();
+
+                ToDo newItem = new ToDo(description, date);
+                System.out.println(newItem.getDateString());
+                System.out.println(newItem.getDescription());
+                list.add(newItem);
+                tableView.setItems(list);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.err.println("Error input file not found!");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Error processing input file");
+            e.printStackTrace();
+        }
+    }
+
 }
